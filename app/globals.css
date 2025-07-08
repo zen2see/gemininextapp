@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'NeonFont'; /* You can change this name */
+  src: url('/Neon.ttf') format('truetype'); /* Adjust path and format if needed */
+  font-weight: bold;
+  font-style: normal;
+}
+
+body {
+  background-color: black;
+  color: lightgrey;
+  font-family: 'NeonFont', sans-serif;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.btn-3d {
+  border: 1px solid #000;
+  border-bottom-width: 4px;
+  border-right-width: 4px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  transition: all 0.1s ease-in-out;
+}
+
+.btn-3d:active {
+  transform: translateY(2px) translateX(2px);
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+  box-shadow: none;
+}
