@@ -35,22 +35,27 @@ const ThreeDInput: React.FC<ThreeDInputProps> = ({ value, onChange, placeholder,
 
   return (
     <group>
+      {/* Border Mesh */}
+      <mesh position={[-5, 0, -0.1]} >
+        <boxGeometry args={[500, 540, 5]} />
+        <meshStandardMaterial color="#90EE90" /> {/* Light green color */}
+      </mesh>
       <mesh
         ref={meshRef}
         onClick={() => setIsFocused(true)}
-        position={[0, 0, 0]} // Reverted to original position
+        position={[0, 0, 0]} // Adjusted for centering
       >
-        <boxGeometry args={[60, 5, 0.5]} />
-        <meshStandardMaterial color={'black'} /> {/* Removed focus color change */}
+        <boxGeometry args={[310, 400, 3]} />
+        <meshStandardMaterial color={'gray'} />
         <Text
           ref={textRef}
-          position={[0, 0, 0.30]}
-          fontSize={1}
+          position={[0, 0, 15.1]} // Slightly more forward
+          fontSize={11.25}
           color="#00FF00"
           anchorX="center"
           anchorY="middle"
-          maxWidth={58}
-          letterSpacing={0.1}
+          maxWidth={300} // Start with a very small maxWidth to force wrapping
+          letterSpacing={0.15} // Restore letterSpacing
           font="/Neon.ttf"
         >
           {value || placeholder}

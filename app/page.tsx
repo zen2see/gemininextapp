@@ -6,6 +6,7 @@ import { Canvas } from '@react-three/fiber';
 import ThreeDButton from '@/components/ThreeDButton';
 import FuturisticDialog from '@/components/FuturisticDialog';
 import ThreeDInput from '@/components/ThreeDInput';
+import { OrbitControls } from '@react-three/drei';
 
 const ThreeSceneContent = dynamic(() => import('@/components/ThreeScene'), { ssr: false });
 
@@ -72,38 +73,53 @@ export default function Home() {
 
   return (
     <main className="flex flex-col h-screen bg-black text-gray-300 items-center ">
-      <Canvas camera={{ position: [0, 0, 30], fov: 50 }} dpr={[1, 2]}>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} />
+      {/* Head Canvas */}
+      <div className="w-full h-[60vh] flex justify-center items-center">
+        <Canvas className="w-full h-full" camera={{ position: [0, 0, 60], fov: 75 }} dpr={[1, 2]}>
+          <Suspense fallback={null}>
+            <ThreeSceneContent aiResponse={response} isLoading={isLoading} isSpeaking={isSpeaking} />
+          </Suspense>
+          <OrbitControls />
+        </Canvas>
+      </div>
+      
+      {/* Input Canvas */}
+      <div className="w-full h-[10vh] flex justify-center items-center">
+          <Canvas className="w-full h-full" dpr={[1, 2]} camera={{ position: [0, 0, 40], fov: 75 }}>
+            <ambientLight intensity={1.5} />
+            <pointLight position={[0, 0, 10]} intensity={2} />
+            <ThreeDInput
+              value={prompt}
+              onChange={setPrompt}
+              placeholder="Enter your prompt here..."
+              disabled={isLoading}
+            />
+          </Canvas>
+      </div>
 
-        <Suspense fallback={null}>
-          <ThreeSceneContent aiResponse={response} isLoading={isLoading} isSpeaking={isSpeaking} />
-        </Suspense>
+      {/* Button Canvas */}
+      <div className="w-full h-[15vh] flex justify-center items-center">
+          <Canvas className="w-full h-full" dpr={[1, 2]} camera={{ position: [0, 0, 100], fov: 75 }}>
+            <ambientLight intensity={1.5} />
+            <pointLight position={[0, 0, 10]} intensity={2} />
+            <ThreeDButton
+                onClick={handleSubmit}
+                text={isLoading ? 'TRANSMITTING...' : 'INITIATE QUERY'}
+                color="orange"
+            />
+          </Canvas>
+      </div>
 
-        <group position={[0, -5, 0]}> {/* Adjust Y position to move input below head */}
-          <ThreeDInput
-            value={prompt}
-            onChange={setPrompt}
-            placeholder="Enter your prompt here..."
-            disabled={isLoading}
-          />
-        </group>
-
-        <group position={[0, -10, 0]}> {/* Adjust Y position to move button below input */}
-          <ThreeDButton
-            onClick={handleSubmit}
-            text={isLoading ? 'TRANSMITTING...' : 'INITIATE QUERY'}
-            color="orange"
-          />
-        </group>
-
-        {/* AI Response Display */}
-        {response && !isLoading && (
-          <group position={[0, -15, 0]}> {/* Adjust Y position to move dialog below button */}
-              <FuturisticDialog aiResponse={response} />
-          </group>
-        )}
-      </Canvas>
+      {/* AI Response Display */}
+      {response && !isLoading && (
+        <div className="mt-[10px] w-full h-[15vh] flex justify-center items-center">
+            <Canvas className="w-full h-full" dpr={[1, 2]} camera={{ position: [0, 0, 40], fov: 75 }}>
+                <ambientLight intensity={1.5} />
+                <pointLight position={[0, 0, 10]} intensity={2} />
+                <FuturisticDialog aiResponse={response} />
+            </Canvas>
+        </div>
+      )}
     </main>
   );
 }

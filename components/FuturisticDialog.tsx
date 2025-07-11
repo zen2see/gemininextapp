@@ -10,17 +10,17 @@ interface FuturisticDialogProps {
 const FuturisticDialog: React.FC<FuturisticDialogProps> = ({ aiResponse }) => {
   return (
     <group>
-      <mesh>
-        <boxGeometry args={[60, 10, 0.2]} />
+      <mesh position={[-5, 0, 0]}>
+        <boxGeometry args={[198, 33, 0.66]} />
         <meshStandardMaterial color="black" />
       </mesh>
       <Text
-        position={[0, 0, 0.11]}
-        fontSize={1}
+        position={[0, 0, 0.363]}
+        fontSize={3.3}
         color="lightgrey"
         anchorX="center"
         anchorY="middle"
-        maxWidth={58}
+        maxWidth={191.4}
         font="/Neon.ttf"
       >
         {aiResponse}

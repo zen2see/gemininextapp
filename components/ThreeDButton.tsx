@@ -25,8 +25,6 @@ const ThreeDButton: React.FC<ThreeDButtonProps> = ({ onClick, text, color }) => 
       meshRef.current.rotation.y = Math.sin(time * 0.6) * (30 * Math.PI / 180);
       // Z-axis rotation
       meshRef.current.rotation.z = Math.sin(time * 0.7) * (30 * Math.PI / 180);
-
-      meshRef.current.scale.x = meshRef.current.scale.y = meshRef.current.scale.z = active ? 0.9 : 1;
     }
   });
 
@@ -38,14 +36,15 @@ const ThreeDButton: React.FC<ThreeDButtonProps> = ({ onClick, text, color }) => 
       onPointerOut={() => setHover(false)}
       onPointerDown={() => setActive(true)}
       onPointerUp={() => setActive(false)}
+      position={[-5, -10, 0]} // Adjusted for centering and visibility
     >
-      <boxGeometry args={[7, 2, 1]} />
+      <boxGeometry args={[206, 62, 31]} />
       <meshStandardMaterial color={hovered ? 'hotpink' : color} />
-      <Text position={[0, 0, 0.75]} fontSize={1} color="#00FFFF" font="/Neon.ttf" fontWeight="bold" maxWidth={6.5} depthOffset={-0.1} material-depthWrite={true}>
+      <Text position={[0, 0, 15.6]} fontSize={31} color="lime" font="/Neon.ttf" fontWeight="bold" maxWidth={200} depthOffset={0.1} material-depthWrite={true}>
         {text}
       </Text>
       {/* Shadow Text */}
-      <Text position={[0.1, -0.1, 0.70]} fontSize={1} color="black" font="/Neon.ttf" fontWeight="bold" maxWidth={6.5} depthOffset={-0.1} material-depthWrite={true}>
+      <Text position={[3.08, -3.08, 15.4]} fontSize={31} color="lime" font="/Neon.ttf" fontWeight="bold" maxWidth={200} depthOffset={0.1} material-depthWrite={true}>
         {text}
       </Text>
     </mesh>

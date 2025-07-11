@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useRef, Suspense, useEffect, useState, forwardRef } from 'react';
+import React, { useRef, useEffect, forwardRef, Suspense } from 'react';
 import { useGLTF, OrbitControls, useAnimations } from '@react-three/drei';
-import * as THREE from 'three';
 import { useThree } from '@react-three/fiber';
+import * as THREE from 'three';
 
 interface ThreeSceneContentProps {
   aiResponse: string;
@@ -36,8 +36,8 @@ const Model = forwardRef<THREE.Group, ModelProps>(({ aiResponse, isLoading, isSp
   return (
     <group
       ref={ref} // Attach the forwarded ref here
-      scale={10}
-      position={[0, 0, 0]} // Centered
+      scale={66}
+      position={[-15, 0, 0]} // Adjusted for centering
       rotation-x={0} // Rotate 0 degrees on X-axis to stand upright
       rotation-y={0} // Rotate 0 degrees on Y-axis to face camera
       rotation-z={0.2}
