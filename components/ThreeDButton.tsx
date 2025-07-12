@@ -20,11 +20,11 @@ const ThreeDButton: React.FC<ThreeDButtonProps> = ({ onClick, text, color }) => 
     if (meshRef.current) {
       const time = state.clock.elapsedTime;
       // X-axis rotation (horizontal plane)
-      meshRef.current.rotation.x = Math.sin(time * 0.8) * (30 * Math.PI / 180);
+      meshRef.current.rotation.x = Math.sin(time * 0.8) * (15 * Math.PI / 180);
       // Y-axis rotation
-      meshRef.current.rotation.y = Math.sin(time * 0.6) * (30 * Math.PI / 180);
+      meshRef.current.rotation.y = Math.sin(time * 0.6) * (15 * Math.PI / 180);
       // Z-axis rotation
-      meshRef.current.rotation.z = Math.sin(time * 0.7) * (30 * Math.PI / 180);
+      meshRef.current.rotation.z = Math.sin(time * 0.7) * (15 * Math.PI / 180);
     }
   });
 

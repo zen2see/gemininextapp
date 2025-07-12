@@ -98,7 +98,7 @@ export default function Home() {
       </div>
 
       {/* Button Canvas */}
-      <div className="w-full h-[15vh] flex justify-center items-center">
+      <div className="w-full h-[15vh] flex justify-center items-center" style={{ border: '1px solid red' }}>
           <Canvas className="w-full h-full" dpr={[1, 2]} camera={{ position: [0, 0, 100], fov: 75 }}>
             <ambientLight intensity={1.5} />
             <pointLight position={[0, 0, 10]} intensity={2} />
