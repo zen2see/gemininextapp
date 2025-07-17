@@ -55,10 +55,28 @@ export default function ThreeSceneContent({ aiResponse, isLoading, isSpeaking }:
 
   return (
     <>
-      <color attach="background" args={['#000000']} />
-      <ambientLight intensity={1} />
-      <pointLight position={[10, 10, 10]} intensity={1} />
-      <directionalLight position={[-5, 5, 5]} intensity={0.5} />
+      <fog attach="fog" args={['#000000', 0.015]} />
+      <ambientLight intensity={.2} />
+      <pointLight position={[10, 20, 5]} intensity={2.5} />
+      <directionalLight position={[-10, -5, 8]} intensity={1.8} />
+      {/* Top-left red spotlight */}
+      <spotLight
+        position={[-50, 50, 20]} // Adjust position as needed
+        intensity={1000} // Adjust intensity as needed
+        angle={0.5} // Angle of the spotlight cone
+        penumbra={0.5} // Softness of the spotlight edge
+        color="red" // Red color
+        castShadow // Enable shadow casting
+      />
+      {/* Top-right blue spotlight */}
+      <spotLight
+        position={[50, 50, 20]} // Adjust position as needed
+        intensity={1000} // Adjust intensity as needed
+        angle={0.5} // Angle of the spotlight cone
+        penumbra={0.5} // Softness of the spotlight edge
+        color="blue" // Blue color
+        castShadow // Enable shadow casting
+      />
       <Suspense fallback={null}>
         {/* Pass ref to Model */}
         <Model aiResponse={aiResponse} isLoading={isLoading} isSpeaking={isSpeaking} ref={modelRef} /> 
