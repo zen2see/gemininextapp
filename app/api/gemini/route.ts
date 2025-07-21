@@ -7,8 +7,11 @@ export async function POST(request: Request) {
   const API_KEY = process.env.GEMINI_API_KEY;
 
   if (!API_KEY) {
-    return NextResponse.json({ error: 'GEMINI_API_KEY is not set' }, { status: 500 });
+    console.error('GEMINI_API_KEY is not set in environment variables.');
+    return NextResponse.json({ error: 'Server configuration error: GEMINI_API_KEY is missing.' }, { status: 500 });
   }
+
+  console.log('GEMINI_API_KEY is set.');
 
   const genAI = new GoogleGenerativeAI(API_KEY);
 

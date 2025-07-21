@@ -13,6 +13,7 @@ interface ThreeDButtonProps {
   isYRotationPaused: boolean;
   isZRotationPaused: boolean;
   onRotationChange: (x: number, y: number, z: number) => void;
+  isSpeaking: boolean;
 }
 
 interface EnhancedTextProps {
@@ -56,7 +57,7 @@ const EnhancedText: React.FC<EnhancedTextProps> = ({
     );
 };
 
-const ThreeDButton: React.FC<ThreeDButtonProps> = ({ onClick, text, color, isXRotationPaused, isYRotationPaused, isZRotationPaused, onRotationChange }) => {
+const ThreeDButton: React.FC<ThreeDButtonProps> = ({ onClick, text, color, isXRotationPaused, isYRotationPaused, isZRotationPaused, onRotationChange, isSpeaking }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHover] = useState(false);
   const [active, setActive] = useState(false);

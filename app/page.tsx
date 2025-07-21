@@ -2,13 +2,18 @@
 
 import React, { useState, Suspense, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useThree } from '@react-three/fiber';
 import ThreeDButton from '@/components/ThreeDButton';
 import FuturisticDialog from '@/components/FuturisticDialog';
 import ThreeDInput from '@/components/ThreeDInput';
 import { OrbitControls, Text } from '@react-three/drei';
 
 const ThreeSceneContent = dynamic(() => import('@/components/ThreeScene'), { ssr: false });
+
+function OrbitControlsSetup() {
+  const { gl } = useThree();
+  return <OrbitControls domElement={gl.domElement} />;
+}
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
@@ -110,7 +115,7 @@ export default function Home() {
           <Suspense fallback={null}>
             <ThreeSceneContent aiResponse={response} isLoading={isLoading} isSpeaking={isSpeaking} />
           </Suspense>
-          <OrbitControls />
+          <OrbitControlsSetup />
         </Canvas>
       </div>
       
@@ -141,8 +146,9 @@ export default function Home() {
                 isYRotationPaused={isYRotationPaused}
                 isZRotationPaused={isZRotationPaused}
                 onRotationChange={handleRotationChange}
+                isSpeaking={isSpeaking}
             />
-            {/* X-axis diagram line */}
+            {/* X-axis diagram line 
             <line position={[250, -30, 0]}>
               <bufferGeometry>
                 <bufferAttribute
@@ -155,7 +161,7 @@ export default function Home() {
               <lineBasicMaterial attach="material" color="red" />
             </line>
             <Text position={[250 + 25, -30 + 8, 0]} fontSize={7.5} color="red" fontWeight={isXRotationPaused ? "bold" : "normal"}>X</Text>
-            {/* Y-axis diagram line */}
+            { Y-axis diagram line }
             <line position={[250, -30, 0]}>
               <bufferGeometry>
                 <bufferAttribute
@@ -168,7 +174,7 @@ export default function Home() {
               <lineBasicMaterial attach="material" color="green" />
             </line>
             <Text position={[250, -30 + 25 + 8, 0]} fontSize={7.5} color="green" fontWeight={isYRotationPaused ? "bold" : "normal"}>Y</Text>
-            {/* Z-axis diagram line */}
+            { Z-axis diagram line }
             <line position={[250, -30, 0]}>
               <bufferGeometry>
                 <bufferAttribute
@@ -179,8 +185,9 @@ export default function Home() {
                 />
               </bufferGeometry>
               <lineBasicMaterial attach="material" color="blue" />
-            </line>
+            </line> 
             <Text position={[250, -30, 25]} fontSize={7.5} color="blue" fontWeight={isZRotationPaused ? "bold" : "normal"}>Z</Text>
+            */}
             {(isXRotationPaused || isYRotationPaused || isZRotationPaused) && (
               <>
                 <Text position={[255 + 50, -30 + 5, 0]} fontSize={10} color="yellow">PAUSED</Text>
