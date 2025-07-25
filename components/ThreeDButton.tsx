@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
+import React, { useRef, useState, useEffect } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -58,26 +58,32 @@ const EnhancedText: React.FC<EnhancedTextProps> = ({
 };
 
 const ThreeDButton: React.FC<ThreeDButtonProps> = ({ onClick, text, color, isXRotationPaused, isYRotationPaused, isZRotationPaused, onRotationChange, isSpeaking }) => {
+  const { invalidate } = useThree();
   const meshRef = useRef<THREE.Mesh>(null);
   const [hovered, setHover] = useState(false);
   const [active, setActive] = useState(false);
   const [scale, setScale] = useState(new THREE.Vector3(1, 1, 1));
   const lastLogTime = useRef(0);
 
+  useEffect(() => {
+    invalidate();
+  }, [text, color, isXRotationPaused, isYRotationPaused, isZRotationPaused, isSpeaking, invalidate]);
+
   useFrame(({ clock }) => {
     if (meshRef.current) {
       const time = clock.elapsedTime;
       // X-axis rotation (more forward/back tilt)
       if (!isXRotationPaused) {
-        meshRef.current.rotation.x = -0.3 + Math.sin(time * 0.8) * (30 * Math.PI / 180); // Increased for equal top/bottom visibility
+       
+        meshRef.current.rotation.x = Math.sin(time * 0.8) * (40 * Math.PI / 180); // Adjusted tilt for more balanced view
       }
       // Y-axis rotation
       if (!isYRotationPaused) {
-        meshRef.current.rotation.y = Math.sin(time * 0.6) * (30 * Math.PI / 180); // See east+west sides
+        meshRef.current.rotation.y = Math.sin(time * 0.6) * (30 * Math.PI / 180); // Increased for more east/west visibility
       }
       // Z-axis rotation
       if (!isZRotationPaused) {
-        meshRef.current.rotation.z = Math.sin(time * 0.7) * (25 * Math.PI / 180);
+        meshRef.current.rotation.z = Math.sin(time * 0.7) * (15 * Math.PI / 180);
       }
 
       // Smoothly animate scale
@@ -112,15 +118,16 @@ const ThreeDButton: React.FC<ThreeDButtonProps> = ({ onClick, text, color, isXRo
   });
 
   return (
-    <mesh
-      ref={meshRef}
-      onClick={onClick}
-      onPointerOver={() => setHover(true)}
-      onPointerOut={() => setHover(false)}
-      onPointerDown={() => setActive(true)}
-      onPointerUp={() => setActive(false)}
-      position={[-5, -30, 0]} // Adjusted for centering and visibility
-    >
+    <group>
+      <mesh
+        ref={meshRef}
+        onClick={onClick}
+        onPointerOver={() => setHover(true)}
+        onPointerOut={() => setHover(false)}
+        onPointerDown={() => setActive(true)}
+        onPointerUp={() => setActive(false)}
+        position={[-5, -11, 0]} // Adjusted for centering and visibility
+      >
       <boxGeometry args={[176.61925, 53.15725, 26.578625]} />
       <meshStandardMaterial
         color={hovered ? 'hotpink' : color}
@@ -140,6 +147,7 @@ const ThreeDButton: React.FC<ThreeDButtonProps> = ({ onClick, text, color, isXRo
         thicknessColor="darkgreen"
       />
     </mesh>
+  </group>
   );
 };
 

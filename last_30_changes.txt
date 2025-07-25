@@ -1,0 +1,5 @@
+56f7e2b - UPDATED removing requestAnimationFrame errors (2 days ago)
+479a826 - UPDATED minimap, added lighting (7 days ago)
+7822079 - UPDATED Bgemini-next-js-app page.tsx and 3DButton.tsx button placement (11 days ago)
+4f8d87e - UPDATED gemini-next-app button size and placement (12 days ago)
+bd9c823 - INITIAL COMMIT gemininextapp (2 weeks ago)

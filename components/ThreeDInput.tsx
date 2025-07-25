@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Text } from '@react-three/drei';
 import * as THREE from 'three';
+import { useThree } from '@react-three/fiber';
 
 interface ThreeDInputProps {
   value: string;
@@ -12,9 +13,14 @@ interface ThreeDInputProps {
 }
 
 const ThreeDInput: React.FC<ThreeDInputProps> = ({ value, onChange, placeholder, disabled }) => {
+  const { invalidate } = useThree();
   const meshRef = useRef<THREE.Mesh>(null);
   const textRef = useRef<THREE.Mesh>(null); // Ref for the Text mesh
   const [isFocused, setIsFocused] = useState(false);
+
+  useEffect(() => {
+    invalidate();
+  }, [value, placeholder, disabled, invalidate]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -38,7 +44,8 @@ const ThreeDInput: React.FC<ThreeDInputProps> = ({ value, onChange, placeholder,
       {/* Border Mesh */}
       <mesh position={[-5, 0, -0.1]} >
         <boxGeometry args={[500, 540, 5]} />
-        <meshStandardMaterial color="#90EE90" /> {/* Light green color */}
+        <meshStandardMaterial color="black" />
+        
       </mesh>
       <mesh
         ref={meshRef}
@@ -46,17 +53,17 @@ const ThreeDInput: React.FC<ThreeDInputProps> = ({ value, onChange, placeholder,
         position={[0, 0, 0]} // Adjusted for centering
       >
         <boxGeometry args={[310, 400, 3]} />
-        <meshStandardMaterial color={'gray'} />
+        <meshStandardMaterial color={'black'} transparent={true} opacity={1} roughness={1} metalness={0} />
         <Text
           ref={textRef}
-          position={[0, 0, 15.1]} // Slightly more forward
-          fontSize={11.25}
-          color="#00FF00"
-          anchorX="center"
+          position={value ? [-155, 0, 15.1] : [0, 0, 15.1]} // Adjust position based on value for alignment
+          fontSize={10}
+          color="#39FF14"
+          anchorX={value ? "left" : "center"}
           anchorY="middle"
-          maxWidth={300} // Start with a very small maxWidth to force wrapping
+          maxWidth={310} // Set maxWidth to 310 units for wrapping
           letterSpacing={0.15} // Restore letterSpacing
-          font="/Neon.ttf"
+          font="/Neonlux.ttf"
         >
           {value || placeholder}
         </Text>

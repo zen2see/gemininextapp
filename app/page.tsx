@@ -6,7 +6,7 @@ import { Canvas, useThree } from '@react-three/fiber';
 import ThreeDButton from '@/components/ThreeDButton';
 import FuturisticDialog from '@/components/FuturisticDialog';
 import ThreeDInput from '@/components/ThreeDInput';
-import { OrbitControls, Text } from '@react-three/drei';
+import { OrbitControls, Text, Line } from '@react-three/drei';
 
 const ThreeSceneContent = dynamic(() => import('@/components/ThreeScene'), { ssr: false });
 
@@ -20,11 +20,9 @@ export default function Home() {
   const [response, setResponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false); // New state for speech status
-  const [lastSpokenResponse, setLastSpokenResponse] = useState('');
-  const speechInitiatedRef = useRef(false);
+  const spokenResponseRef = useRef(''); // Tracks what has been spoken
 
-  // Speech Synthesis state and effects
-  const [utterance, setUtterance] = useState<SpeechSynthesisUtterance | null>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   useEffect(() => {
     if ('speechSynthesis' in window) {
@@ -33,30 +31,27 @@ export default function Home() {
       newUtterance.onend = () => {
         setIsSpeaking(false); // Stop animation when speech ends
       };
-      setUtterance(newUtterance);
+      utteranceRef.current = newUtterance;
     }
   }, []);
 
   useEffect(() => {
-    if (utterance) {
-      if (response && !isLoading && response !== lastSpokenResponse && !speechInitiatedRef.current) {
-        utterance.text = response;
-        window.speechSynthesis.speak(utterance);
-        setIsSpeaking(true);
-        setLastSpokenResponse(response); // Mark this response as spoken
-        speechInitiatedRef.current = true; // Mark speech as initiated for this response
-      } else if (isLoading) {
-        window.speechSynthesis.cancel();
-        setIsSpeaking(false);
-        setLastSpokenResponse(''); // Reset when loading new prompt
-        speechInitiatedRef.current = false; // Reset ref for new prompt
-      }
+    if (utteranceRef.current && response && !isLoading && response !== spokenResponseRef.current) {
+      // Only speak if a new, non-empty response is available and not loading
+      utteranceRef.current.text = response;
+      window.speechSynthesis.speak(utteranceRef.current);
+      setIsSpeaking(true); // Start animation when speech actually begins
+      spokenResponseRef.current = response; // Mark this response as spoken
+    } else if (isLoading) {
+      // If loading, cancel any ongoing speech and reset state
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      spokenResponseRef.current = ''; // Reset for next response
     }
-  }, [response, isLoading, utterance, lastSpokenResponse]);
+  }, [response, isLoading]); // Dependencies are response and isLoading
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    setResponse('Processing...');
 
     try {
       const res = await fetch('/api/gemini', {
@@ -110,8 +105,8 @@ export default function Home() {
   return (
     <main className="flex flex-col h-screen bg-black text-gray-300 items-center ">
       {/* Head Canvas */}
-      <div className="w-full h-[60vh] flex justify-center items-center">
-        <Canvas className="w-full h-full" camera={{ position: [0, 0, 60], fov: 75 }} dpr={[1, 2]}>
+      <div className="w-full h-[55vh] flex justify-center items-center mt-[50px]">
+        <Canvas className="w-full h-full" camera={{ position: [0, 0, 60], fov: 75 }} dpr={[1, 1.5]}>
           <Suspense fallback={null}>
             <ThreeSceneContent aiResponse={response} isLoading={isLoading} isSpeaking={isSpeaking} />
           </Suspense>
@@ -120,8 +115,8 @@ export default function Home() {
       </div>
       
       {/* Input Canvas */}
-      <div className="w-full h-[10vh] flex justify-center items-center">
-          <Canvas className="w-full h-full" dpr={[1, 2]} camera={{ position: [0, 0, 40], fov: 75 }}>
+      <div className="w-full h-[10vh] flex justify-center items-center" style={{ border: '1px solid yellow' }}>
+          <Canvas className="w-full h-full" dpr={[1, 1.5]} camera={{ position: [0, 0, 40], fov: 75 }}>
             <ambientLight intensity={1.5} />
             <pointLight position={[0, 0, 10]} intensity={2} />
             <ThreeDInput
@@ -134,10 +129,11 @@ export default function Home() {
       </div>
 
       {/* Button Canvas */}
-      <div className="w-full h-[15vh] flex justify-center items-center" style={{ border: '1px solid red' }}>
-          <Canvas className="w-full h-full" dpr={[1, 2]} camera={{ position: [0, 0, 100], fov: 75 }}>
+      <div className="w-full h-[15vh] flex justify-center items-center mt-[5px]" style={{ border: '1px solid yellow' }}>
+          <Canvas className="w-full h-full" dpr={[1, 1.5]} camera={{ position: [0, 0, 100], fov: 75 }}>
             <ambientLight intensity={1.5} />
-            <pointLight position={[0, 0, 10]} intensity={2} />
+            <directionalLight position={[0, 10, 10]} intensity={2.5} />
+            <directionalLight position={[0, -10, 10]} intensity={1} />
             <ThreeDButton
                 onClick={handleSubmit}
                 text={isLoading ? 'TRANSMITTING...' : 'INITIATE QUERY'}
@@ -148,50 +144,22 @@ export default function Home() {
                 onRotationChange={handleRotationChange}
                 isSpeaking={isSpeaking}
             />
-            {/* X-axis diagram line 
-            <line position={[250, -30, 0]}>
-              <bufferGeometry>
-                <bufferAttribute
-                  attach="attributes-position"
-                  array={new Float32Array([-20, 0, 0, 20, 0, 0])}
-                  itemSize={3}
-                  count={2}
-                />
-              </bufferGeometry>
-              <lineBasicMaterial attach="material" color="red" />
-            </line>
-            <Text position={[250 + 25, -30 + 8, 0]} fontSize={7.5} color="red" fontWeight={isXRotationPaused ? "bold" : "normal"}>X</Text>
-            { Y-axis diagram line }
-            <line position={[250, -30, 0]}>
-              <bufferGeometry>
-                <bufferAttribute
-                  attach="attributes-position"
-                  array={new Float32Array([0, -20, 0, 0, 20, 0])}
-                  itemSize={3}
-                  count={2}
-                />
-              </bufferGeometry>
-              <lineBasicMaterial attach="material" color="green" />
-            </line>
+            {/* X-axis diagram line */}
+            <Line points={[[-20, 0, 0], [20, 0, 0]]} color="red" position={[250, -30, 0]}>
+            </Line>
+            <Text position={[250 + 25, -30 + 8 + 2, 0]} fontSize={7.5} color="red" fontWeight={isXRotationPaused ? "bold" : "normal"}>X</Text>
+            {/* Y-axis diagram line */}
+            <Line points={[[0, -20, 0], [0, 20, 0]]} color="green" position={[250, -30, 0]}>
+            </Line>
             <Text position={[250, -30 + 25 + 8, 0]} fontSize={7.5} color="green" fontWeight={isYRotationPaused ? "bold" : "normal"}>Y</Text>
-            { Z-axis diagram line }
-            <line position={[250, -30, 0]}>
-              <bufferGeometry>
-                <bufferAttribute
-                  attach="attributes-position"
-                  array={new Float32Array([0, 0, -20, 0, 0, 20])}
-                  itemSize={3}
-                  count={2}
-                />
-              </bufferGeometry>
-              <lineBasicMaterial attach="material" color="blue" />
-            </line> 
-            <Text position={[250, -30, 25]} fontSize={7.5} color="blue" fontWeight={isZRotationPaused ? "bold" : "normal"}>Z</Text>
-            */}
+            {/* Z-axis diagram line */}
+            <Line points={[[0, 0, -20], [0, 0, 20]]} color="blue" position={[250, -30, 0]}>
+            </Line> 
+            <Text position={[244, -30, 25]} fontSize={7.5} color="blue" fontWeight={isZRotationPaused ? "bold" : "normal"}>Z</Text>
             {(isXRotationPaused || isYRotationPaused || isZRotationPaused) && (
               <>
-                <Text position={[255 + 50, -30 + 5, 0]} fontSize={10} color="yellow">PAUSED</Text>
-                <Text position={[255 + 50 + 30, -30 + 5, 0]} fontSize={8} color="yellow">
+                <Text position={[255 + 40, 33, 0]} fontSize={14} color="yellow">PAUSED</Text>
+                <Text position={[255 + 40 + 40, 33, 0]} fontSize={8} color="yellow">
                   {`${isXRotationPaused ? 'X ' : ''}${isYRotationPaused ? 'Y ' : ''}${isZRotationPaused ? 'Z ' : ''}`.trim()}
                 </Text>
               </>
@@ -199,9 +167,9 @@ export default function Home() {
             {/* Display rotation values when paused */}
             {(isXRotationPaused || isYRotationPaused || isZRotationPaused) && (
               <>
-                <Text position={[250 + 50, -35 - 10, 0]} fontSize={7.5} color="red">{`X=${buttonRotation.x.toFixed(2)}`}</Text>
-                <Text position={[250 + 50, -35 - 18, 0]} fontSize={7.5} color="green">{`Y=${buttonRotation.y.toFixed(2)}`}</Text>
-                <Text position={[250 + 50, -35 - 26, 0]} fontSize={7.5} color="blue">{`Z=${buttonRotation.z.toFixed(2)}`}</Text>
+                <Text position={[250 + 50, 16, 0]} fontSize={10} color="red">{`X=${buttonRotation.x.toFixed(2)}`}</Text>
+                <Text position={[250 + 49, 5, 0]} fontSize={10} color="green">{`Y=${buttonRotation.y.toFixed(2)}`}</Text>
+                <Text position={[250 + 50, -6, 0]} fontSize={10} color="blue">{`Z=${buttonRotation.z.toFixed(2)}`}</Text>
               </>
             )}
           </Canvas>
@@ -209,8 +177,8 @@ export default function Home() {
 
       {/* AI Response Display */}
       {response && !isLoading && (
-        <div className="mt-[10px] w-full h-[15vh] flex justify-center items-center">
-            <Canvas className="w-full h-full" dpr={[1, 2]} camera={{ position: [0, 0, 40], fov: 75 }}>
+        <div className="mt-[10px] w-full h-[15vh] flex justify-center items-center overflow-y-auto">
+            <Canvas className="w-full h-full" dpr={[1, 1.5]} camera={{ position: [0, 0, 40], fov: 75 }}>
                 <ambientLight intensity={1.5} />
                 <pointLight position={[0, 0, 10]} intensity={2} />
                 <FuturisticDialog aiResponse={response} />

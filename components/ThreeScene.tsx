@@ -55,7 +55,8 @@ export default function ThreeSceneContent({ aiResponse, isLoading, isSpeaking }:
 
   return (
     <>
-      <fog attach="fog" args={['#000000', 0.015]} />
+      
+            <fog attach="fog" args={['#000000', 0.015]} />
       <ambientLight intensity={.2} />
       <pointLight position={[10, 20, 5]} intensity={2.5} />
       <directionalLight position={[-10, -5, 8]} intensity={1.8} />
