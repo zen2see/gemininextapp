@@ -83,16 +83,21 @@ export default function Home() {
   // Keyboard event listener for toggling rotation
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      switch (event.key.toLowerCase()) {
-        case 'x':
-          setIsXRotationPaused((prev) => !prev);
-          break;
-        case 'y':
-          setIsYRotationPaused((prev) => !prev);
-          break;
-        case 'z':
-          setIsZRotationPaused((prev) => !prev);
-          break;
+      if (event.altKey) { // Check if Alt key is pressed
+        switch (event.key.toLowerCase()) {
+          case 'x':
+            setIsXRotationPaused((prev) => !prev);
+            break;
+          case 'y':
+            setIsYRotationPaused((prev) => !prev);
+            break;
+          case 'z':
+            setIsZRotationPaused((prev) => !prev);
+            break;
+        }
+      } else {
+        // If Alt key is not pressed, do nothing for these keys
+        return;
       }
     };
 
@@ -159,6 +164,7 @@ export default function Home() {
             {(isXRotationPaused || isYRotationPaused || isZRotationPaused) && (
               <>
                 <Text position={[255 + 40, 33, 0]} fontSize={14} color="yellow">PAUSED</Text>
+                <Text position={[255 + 40, 23, 0]} fontSize={6} color="yellow">press ALT + KEY to UNDO</Text>
                 <Text position={[255 + 40 + 40, 33, 0]} fontSize={8} color="yellow">
                   {`${isXRotationPaused ? 'X ' : ''}${isYRotationPaused ? 'Y ' : ''}${isZRotationPaused ? 'Z ' : ''}`.trim()}
                 </Text>
