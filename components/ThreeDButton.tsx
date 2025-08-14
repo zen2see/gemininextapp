@@ -128,7 +128,7 @@ const ThreeDButton: React.FC<ThreeDButtonProps> = ({ onClick, text, color, isXRo
         onPointerUp={() => setActive(false)}
         position={[-5, -11, 0]} // Adjusted for centering and visibility
       >
-      <boxGeometry args={[176.61925, 53.15725, 26.578625]} />
+      <boxGeometry args={[135.11372625, 40.66529625, 20.332648125]} />
       <meshStandardMaterial
         color={hovered ? 'hotpink' : color}
         metalness={0.7}
@@ -139,7 +139,7 @@ const ThreeDButton: React.FC<ThreeDButtonProps> = ({ onClick, text, color, isXRo
       <EnhancedText
         text={text}
         font="/Neon.ttf"
-        fontSize={26.578625}
+        fontSize={20.332648125}
         maxWidth={200}
         position={[0, 0, 18]}
         mainColor="lime"

@@ -6,7 +6,8 @@ import { Canvas, useThree } from '@react-three/fiber';
 import ThreeDButton from '@/components/ThreeDButton';
 import FuturisticDialog from '@/components/FuturisticDialog';
 import ThreeDInput from '@/components/ThreeDInput';
-import { OrbitControls, Text, Line } from '@react-three/drei';
+import { OrbitControls, Text } from '@react-three/drei';
+import CustomLine from '@/components/CustomLine';
 
 const ThreeSceneContent = dynamic(() => import('@/components/ThreeScene'), { ssr: false });
 
@@ -120,7 +121,8 @@ export default function Home() {
       </div>
       
       {/* Input Canvas */}
-      <div className="w-full h-[10vh] flex justify-center items-center" style={{ border: '1px solid yellow' }}>
+      <div className="w-full h-[10vh] flex justify-center items-center"> 
+          {/* style={{ border: '1px solid yellow' }} */}
           <Canvas className="w-full h-full" dpr={[1, 1.5]} camera={{ position: [0, 0, 40], fov: 75 }}>
             <ambientLight intensity={1.5} />
             <pointLight position={[0, 0, 10]} intensity={2} />
@@ -134,8 +136,8 @@ export default function Home() {
       </div>
 
       {/* Button Canvas */}
-      <div className="w-full h-[15vh] flex justify-center items-center mt-[5px]" style={{ border: '1px solid yellow' }}>
-          <Canvas className="w-full h-full" dpr={[1, 1.5]} camera={{ position: [0, 0, 100], fov: 75 }}>
+      <div className="w-full h-[25vh] flex justify-center items-center mt-[5px]" style={{ border: '1px solid yellow' }}>
+          <Canvas className="w-full h-full" dpr={[1, 1.5]} camera={{ position: [0, 0, 120], fov: 75 }}>
             <ambientLight intensity={1.5} />
             <directionalLight position={[0, 10, 10]} intensity={2.5} />
             <directionalLight position={[0, -10, 10]} intensity={1} />
@@ -150,23 +152,19 @@ export default function Home() {
                 isSpeaking={isSpeaking}
             />
             {/* X-axis diagram line */}
-            <Line points={[[-20, 0, 0], [20, 0, 0]]} color="red" position={[250, -30, 0]}>
-            </Line>
-            <Text position={[250 + 25, -30 + 8 + 2, 0]} fontSize={7.5} color="red" fontWeight={isXRotationPaused ? "bold" : "normal"}>X</Text>
+            <CustomLine points={[[-20, 0, 0], [20, 0, 0]]} color="red" position={[250, -30, 0]} />
+            <Text position={[250 + 25, -30 + 8 + 2, 0]} fontSize={15} color="red" fontWeight={isXRotationPaused ? "bold" : "normal"}>X</Text>
             {/* Y-axis diagram line */}
-            <Line points={[[0, -20, 0], [0, 20, 0]]} color="green" position={[250, -30, 0]}>
-            </Line>
-            <Text position={[250, -30 + 25 + 8, 0]} fontSize={7.5} color="green" fontWeight={isYRotationPaused ? "bold" : "normal"}>Y</Text>
+            <CustomLine points={[[0, -20, 0], [0, 20, 0]]} color="green" position={[250, -30, 0]} />
+            <Text position={[250, -30 + 25 + 8, 0]} fontSize={15} color="green" fontWeight={isYRotationPaused ? "bold" : "normal"}>Y</Text>
             {/* Z-axis diagram line */}
-            <Line points={[[0, 0, -20], [0, 0, 20]]} color="blue" position={[250, -30, 0]}>
-            </Line> 
-            <Text position={[244, -30, 25]} fontSize={7.5} color="blue" fontWeight={isZRotationPaused ? "bold" : "normal"}>Z</Text>
+            <CustomLine points={[[0, 0, -20], [0, 0, 20]]} color="blue" position={[250, -30, 0]} /> 
+            <Text position={[244, -30, 25]} fontSize={15} color="blue" fontWeight={isZRotationPaused ? "bold" : "normal"}>Z</Text>
             {(isXRotationPaused || isYRotationPaused || isZRotationPaused) && (
               <>
-                <Text position={[255 + 40, 33, 0]} fontSize={14} color="yellow">PAUSED</Text>
-                <Text position={[255 + 40, 23, 0]} fontSize={6} color="yellow">press ALT + KEY to UNDO</Text>
-                <Text position={[255 + 40 + 40, 33, 0]} fontSize={8} color="yellow">
-                  {`${isXRotationPaused ? 'X ' : ''}${isYRotationPaused ? 'Y ' : ''}${isZRotationPaused ? 'Z ' : ''}`.trim()}
+                <Text position={[255 + 40, 27, 0]} fontSize={12} color="yellow">press ALT + KEY to UNDO</Text>
+                <Text position={[255 + 40, 43, 0]} fontSize={14} color="yellow">
+                  {`PAUSED ${isXRotationPaused ? 'X' : ''}${isYRotationPaused ? 'Y' : ''}${isZRotationPaused ? 'Z' : ''}`.trim()}
                 </Text>
               </>
             )}
