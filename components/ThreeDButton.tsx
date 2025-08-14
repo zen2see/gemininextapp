@@ -126,7 +126,7 @@ const ThreeDButton: React.FC<ThreeDButtonProps> = ({ onClick, text, color, isXRo
         onPointerOut={() => setHover(false)}
         onPointerDown={() => setActive(true)}
         onPointerUp={() => setActive(false)}
-        position={[-5, -11, 0]} // Adjusted for centering and visibility
+        position={[-5, 27, 0]} // Adjusted for centering and visibility
       >
       <boxGeometry args={[135.11372625, 40.66529625, 20.332648125]} />
       <meshStandardMaterial

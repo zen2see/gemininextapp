@@ -9,12 +9,21 @@
   font-style: normal;
 }
 
+html,
 body {
   background-color: black;
   color: lightgrey;
   font-family: 'NeonFont', sans-serif;
   font-size: 2rem;
   font-weight: bold;
+  overflow: hidden; /* This will prevent all scrolling on the page */
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+body::-webkit-scrollbar {
+    display: none;
 }
 
 .btn-3d {
@@ -30,4 +39,15 @@ body {
   border-bottom-width: 2px;
   border-right-width: 2px;
   box-shadow: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }

@@ -136,7 +136,7 @@ export default function Home() {
       </div>
 
       {/* Button Canvas */}
-      <div className="w-full h-[25vh] flex justify-center items-center mt-[5px]" style={{ border: '1px solid yellow' }}>
+      <div className="w-full h-[25vh] flex justify-center items-center mt-[5px]">
           <Canvas className="w-full h-full" dpr={[1, 1.5]} camera={{ position: [0, 0, 120], fov: 75 }}>
             <ambientLight intensity={1.5} />
             <directionalLight position={[0, 10, 10]} intensity={2.5} />
@@ -152,14 +152,14 @@ export default function Home() {
                 isSpeaking={isSpeaking}
             />
             {/* X-axis diagram line */}
-            <CustomLine points={[[-20, 0, 0], [20, 0, 0]]} color="red" position={[250, -30, 0]} />
-            <Text position={[250 + 25, -30 + 8 + 2, 0]} fontSize={15} color="red" fontWeight={isXRotationPaused ? "bold" : "normal"}>X</Text>
+            <CustomLine points={[[-20, 0, 0], [20, 0, 0]]} color="red" position={[250, 20, 0]} />
+            <Text position={[250 + 25, 40, 0]} fontSize={15} color="red" fontWeight={isXRotationPaused ? "bold" : "normal"}>X</Text>
             {/* Y-axis diagram line */}
-            <CustomLine points={[[0, -20, 0], [0, 20, 0]]} color="green" position={[250, -30, 0]} />
-            <Text position={[250, -30 + 25 + 8, 0]} fontSize={15} color="green" fontWeight={isYRotationPaused ? "bold" : "normal"}>Y</Text>
+            <CustomLine points={[[0, -20, 0], [0, 20, 0]]} color="green" position={[250, 20, 0]} />
+            <Text position={[250, -30 + 85 + 8, 0]} fontSize={15} color="green" fontWeight={isYRotationPaused ? "bold" : "normal"}>Y</Text>
             {/* Z-axis diagram line */}
-            <CustomLine points={[[0, 0, -20], [0, 0, 20]]} color="blue" position={[250, -30, 0]} /> 
-            <Text position={[244, -30, 25]} fontSize={15} color="blue" fontWeight={isZRotationPaused ? "bold" : "normal"}>Z</Text>
+            <CustomLine points={[[0, 0, -20], [0, 0, 20]]} color="blue" position={[250, 20, 0]} /> 
+            <Text position={[244, 10, 25]} fontSize={15} color="blue" fontWeight={isZRotationPaused ? "bold" : "normal"}>Z</Text>
             {(isXRotationPaused || isYRotationPaused || isZRotationPaused) && (
               <>
                 <Text position={[255 + 40, 27, 0]} fontSize={12} color="yellow">press ALT + KEY to UNDO</Text>
@@ -181,7 +181,7 @@ export default function Home() {
 
       {/* AI Response Display */}
       {response && !isLoading && (
-        <div className="mt-[10px] w-full h-[15vh] flex justify-center items-center overflow-y-auto">
+        <div className="mt-[10px] w-full h-[15vh] flex justify-center items-center hide-scrollbar overflow-y-auto">
             <Canvas className="w-full h-full" dpr={[1, 1.5]} camera={{ position: [0, 0, 40], fov: 75 }}>
                 <ambientLight intensity={1.5} />
                 <pointLight position={[0, 0, 10]} intensity={2} />
